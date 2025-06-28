@@ -1,0 +1,50 @@
+{% extends 'shop/main.html'%}
+
+{% block title %}
+    {{category__name}}
+{% endblock title %}
+
+{% block content %}
+
+<section class="bg-light py-4 my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-3">Cart</h4>
+                <hr style="border-color:#b8bfc2;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Favorites</li>
+                    </ol>
+                </nav>
+                {% include 'inc/message.html' %}
+            </div>
+        </div>
+    
+    
+    <div class="row">
+    
+    <table class="table table-bordered">
+        <tr>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Amount</th>
+            <th>Remove</th>
+        </tr>
+        {% for item in favorites %}
+            <tr>
+                <td><img src={{item.product.product_image.url}} height="75px" alt="{{item.product_name}}"></td>
+                <td>{{item.product.name}}</td>
+                <td>₹ {{item.product.selling_price}}</td>
+                <td><a href="{% url 'remove_from_fav' item.id %}" onclick="return confirm('Are you sure to remove?')" class="btn btn-danger btn-sm">Remove</i></td>
+            </tr>
+        {% endfor %}
+         
+    </table>
+    </div>
+    </div>
+    </section>
+    <script></script>
+
+{% endblock content %}

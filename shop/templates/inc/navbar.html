@@ -1,0 +1,35 @@
+{% load  static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}"><i class="fas fa-cubes" style="font-size:25px"></i>SHOPKART</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link active" aria-current="page" href="{% url 'home'%}"><i class="bi bi-house" ></i></a>
+        <a class="nav-link" href="{% url 'collections' %}">Collections</a>
+        {% if user.is_authenticated %}
+          <a class="nav-link" href="{% url 'cart' %}" ><i class="bi bi-cart" ></i></a>
+          <a class="nav-link" href="{% url 'fav' %}" ><i class="bi bi-heart" ></i></a>
+          <a class="nav-link" href="" >{{request.user}}</a>
+          <a class="nav-link" href="http://localhost:8080/realms/shopkart/protocol/openid-connect/logout?id_token_hint={{ id_token }}&post_logout_redirect_uri=http://localhost:8000/shop/logout"><i class="bi bi-box-arrow-right" ></i></a><!--Logout-->
+        {% else %}
+         <a class="nav-link" href="http://localhost:8080/realms/shopkart/protocol/openid-connect/auth?client_id=shopkart-client&redirect_uri=http://localhost:8000/shop/keycloak/callback/&response_type=code&scope=openid&prompt=login" >Login</a>          <!--{% url 'login' %}-->
+        
+        <a class="nav-link" href="http://localhost:8080/realms/shopkart/protocol/openid-connect/registrations?client_id=shopkart-client&response_type=code&redirect_uri=http://localhost:8000/shop/keycloak/callback/&scope=openid" >Register</a>        
+        {% endif %}
+        
+      </div>
+    </div>
+    {% include 'inc/searchbar.html' %}
+  
+</div>
+
+</div>
+  </div>
+</nav>
+
+
+

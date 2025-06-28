@@ -1,0 +1,86 @@
+{% load static %}
+
+<div class="dropdown" >
+  <form class="d-flex" id="searchForm" method="GET" action="{% url 'search_redirect' %}" >
+    <div class="input-group">
+      <input class="form-control dropdown-toggle" name="term" type="search" placeholder="Search products..." 
+             id="searchDropdown" data-bs-toggle="dropdown" aria-expanded="false" autocomplete="off">
+      <button class="btn btn-primary" type="submit">
+        <i class="bi bi-search"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end w-100" aria-labelledby="searchDropdown" id="searchResults">
+        <!-- Default content when no search -->
+        <li><div class="dropdown-header">Trending Products</div></li>
+        {% for product in trending_products|slice:":3" %}
+        <li>
+          <a class="dropdown-item" href="{% url 'product_details' cname=product.category.name pname=product.name %}">
+            {{ product.name }} ({{ product.category.name }})
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchDropdown');
+    const searchResults = document.getElementById('searchResults');
+    const searchForm = document.getElementById('searchForm');
+    
+    // Function to perform search
+    function performSearch() {
+        const term = searchInput.value.trim();
+        if (term.length > 2) {  // Only search if at least 3 characters
+            console.log(term);
+            fetch(`/search/?term=${encodeURIComponent(term)}`)
+                .then(response => response.json())
+                .then(data => {
+                    searchResults.innerHTML = '';
+                    
+                    if (data.length > 0) {
+                        const resultsHeader = document.createElement('li');
+                        resultsHeader.innerHTML = `<div class="dropdown-header">Results for "${term}"</div>`;
+                        searchResults.appendChild(resultsHeader);
+                        
+                        data.forEach(item => {
+                            const resultItem = document.createElement('li');
+                            resultItem.innerHTML = `<a class="dropdown-item" href="${item.url}">${item.label}</a>`;
+                            searchResults.appendChild(resultItem);
+                        });
+                    } else {
+                        const noResults = document.createElement('li');
+                        noResults.innerHTML = '<div class="dropdown-item text-muted">No products found</div>';
+                        searchResults.appendChild(noResults);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        } else {
+            // Show default content when search is empty
+            searchResults.innerHTML = `
+                <li><div class="dropdown-header">Trending Products</div></li>
+                {% for product in trending_products|slice:":3" %}
+                <li>
+                  <a class="dropdown-item" href="{% url 'product_details' cname=product.category.name pname=product.name %}">
+                    {{ product.name }} ({{ product.category.name }})
+                  </a>
+                </li>
+                {% endfor %}
+            `;
+        }
+    }
+    
+    // Event listeners
+    searchInput.addEventListener('input', performSearch);
+    searchInput.addEventListener('focus', function() {
+        performSearch(); // Refresh results when focused
+        const dropdown = new bootstrap.Dropdown(searchInput);
+        dropdown.show();
+    });
+    
+   
+});
+</script>

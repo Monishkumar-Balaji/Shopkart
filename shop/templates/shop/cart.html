@@ -1,0 +1,70 @@
+{% extends 'shop/main.html'%}
+
+{% block title %}
+    {{category__name}}
+{% endblock title %}
+
+{% block content %}
+
+<section class="bg-light py-4 my-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h4 class="mb-3">Cart</h4>
+                <hr style="border-color:#b8bfc2;">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                    </ol>
+                </nav>
+                {% include 'inc/message.html' %}
+            </div>
+        </div>
+    
+    
+    <div class="row">
+    
+    <table class="table table-bordered">
+        <tr>
+            <th>Image</th>
+            <th>Product Name</th>
+            <th>Unit</th>
+            <th>Quantity</th>
+            <th>Amount</th>
+            <th>Remove</th>
+        </tr>
+        {% for item in cart %}
+            <tr>
+                <td><img src={{item.product.product_image.url}} height="75px" alt="{{item.product_name}}"></td>
+                <td>{{item.product.name}}</td>
+                <td>₹ {{item.product.selling_price}}</td>
+                <td>{{item.product_qty}}</td>
+                <td class="amt">₹ {{item.total_cost}}</td>
+                <td><a href="{% url 'remove_from_cart' item.id %}" onclick="return confirm('Are you sure to remove?')" class="btn btn-danger btn-sm">Remove</i></td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <td></td>
+                <td></td>
+                <td colspan="2"><b>Toal Amount</b></td>
+                <td id="net_amount" >0</td>
+            </tr>
+    </table>
+    </div>
+    </div>
+    </section>
+    <script>
+       document.addEventListener("DOMContentLoaded", function() {
+        const nodes = document.querySelectorAll('.amt');
+        const arr = Array.from(nodes);
+        const res = arr.reduce((acc, curr) => {
+        let amount = curr.textContent.replace('₹', '').trim();
+        return acc += Number(amount);
+    }, 0);
+    document.getElementById("net_amount").innerHTML = "₹ " + res;
+});
+
+    </script>
+
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends 'shop/main.html'%}
+
+{% block title %}
+    SHOPKART
+{% endblock title %}
+
+{% block content %}
+
+{% include 'inc/slider.html' %}
+{% include 'inc/message.html' %}
+<div class="container" style ="margin-top:70px">
+    <div class="row">
+        <div class="col-12">
+            <h4 class="mb-3"> Lastest Offers</h4>
+            <hr style="border-color:white;">
+        </div>
+    {% for item in product %}
+            <div class="col-md-4 col-lg-3  ">
+                <div class="card my-3 h-100 pic-box">
+                    <img src="{{item.product_image.url}}" class="card-img-top" alt="{{item.name}}">
+                    <a href = "{% url 'product_details' item.category.name item.name %}">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-primary">{{ item.name }}</h5>
+                        <p class="card-text flex-grow-1">
+                            <span class="float-start old_price">₹<s>{{ item.original_price|stringformat:'d' }}</s></span>
+                            <span class="float-end new_price">₹{{item.selling_price |stringformat:'d' }}</span>
+                        </p>
+                    </a>
+                    </div>
+                </div>
+            </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock content %}
